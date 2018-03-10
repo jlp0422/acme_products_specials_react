@@ -18996,14 +18996,12 @@ var App = function (_React$Component) {
     _this.state = {
       regularProds: [],
       specialProds: [],
-      allProducts: [],
       productToRegular: {},
       productToSpecial: {}
     };
     _this.makeSpecial = _this.makeSpecial.bind(_this);
     _this.makeRegular = _this.makeRegular.bind(_this);
     _this.formSubmit = _this.formSubmit.bind(_this);
-    // this.regularButtonClick = this.regularButtonClick.bind(this)
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -19017,9 +19015,7 @@ var App = function (_React$Component) {
       var regularProds = [];
       _axios2.default.get('/api/products').then(function (res) {
         return res.data;
-      })
-      // .then( products => this.setState({ allProducts: products }))
-      .then(function (products) {
+      }).then(function (products) {
         products.map(function (product) {
           return product.isSpecial ? specialProds.push(product) : regularProds.push(product);
         });
@@ -19031,7 +19027,6 @@ var App = function (_React$Component) {
     key: 'formSubmit',
     value: function formSubmit(ev) {
       ev.preventDefault();
-      console.log(this.state);
       this.state.productToRegular.name ? this.makeRegular(this.state.productToRegular) : this.makeSpecial(this.state.productToSpecial);
     }
   }, {
@@ -19042,7 +19037,6 @@ var App = function (_React$Component) {
       var prod = allProducts.find(function (product) {
         return product.id === id * 1;
       });
-      console.log(prod);
       prod.isSpecial ? this.setState({ productToRegular: prod }) : this.setState({ productToSpecial: prod });
     }
   }, {
@@ -19053,7 +19047,6 @@ var App = function (_React$Component) {
       _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
         return res.data;
       }).then(function (product) {
-        console.log(product);
         var newState = _this3.state.specialProds.filter(function (_product) {
           return _product.id !== product.id;
         });
@@ -19070,7 +19063,6 @@ var App = function (_React$Component) {
       _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
         return res.data;
       }).then(function (product) {
-        console.log(product);
         var newState = _this4.state.regularProds.filter(function (_product) {
           return _product.id !== product.id;
         });

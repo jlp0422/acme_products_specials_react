@@ -23,7 +23,7 @@ app.put('/api/products/:id', (req, res, next) => {
       product.isSpecial = !product.isSpecial
       return product.save()
     })
-    .then( product => console.log(product.get()))
+    .then( product => res.send(product))
     .catch(next)
 })
 

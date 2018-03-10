@@ -18976,6 +18976,8 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -18994,9 +18996,11 @@ var App = function (_React$Component) {
     _this.state = {
       regularProds: [],
       specialProds: [],
-      productId: ''
+      allProducts: [],
+      productToChange: {}
     };
-    _this.changeProduct = _this.changeProduct.bind(_this);
+    _this.makeSpecial = _this.makeSpecial.bind(_this);
+    _this.makeRegular = _this.makeRegular.bind(_this);
     _this.buttonClick = _this.buttonClick.bind(_this);
     _this.onChange = _this.onChange.bind(_this);
     return _this;
@@ -19012,7 +19016,9 @@ var App = function (_React$Component) {
       _axios2.default.get('/api/products').then(function (res) {
         return res.data;
       }).then(function (products) {
-        return products.map(function (product) {
+        return _this2.setState({ allProducts: products });
+      }).then(function () {
+        _this2.state.allProducts.map(function (product) {
           return product.isSpecial ? specialProds.push(product) : regularProds.push(product);
         });
       }).then(function () {
@@ -19023,40 +19029,71 @@ var App = function (_React$Component) {
     key: 'buttonClick',
     value: function buttonClick(ev) {
       ev.preventDefault();
-      this.changeProduct(this.state.productId);
+      var prod = this.state.productToChange;
+      prod.isSpecial ? this.makeRegular(prod) : this.makeSpecial(prod);
     }
   }, {
     key: 'onChange',
     value: function onChange(ev) {
-      var productId = ev.target.value;
-      this.setState({ productId: productId });
+      var id = ev.target.value;
+      var prod = this.state.allProducts.find(function (product) {
+        return product.id === id * 1;
+      });
+      this.setState({ productToChange: prod });
     }
   }, {
-    key: 'changeProduct',
-    value: function changeProduct(productId) {
-      _axios2.default.put('/api/products/' + productId, productId).then(function (res) {
+    key: 'makeRegular',
+    value: function makeRegular(product) {
+      var _this3 = this;
+
+      _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
         return res.data;
       }).then(function (product) {
-        return console.log(product);
+        var newState = _this3.state.specialProds.filter(function (_product) {
+          return _product.id !== product.id;
+        });
+        _this3.setState({ specialProds: newState, regularProds: [].concat(_toConsumableArray(_this3.state.regularProds), [product]) });
       });
     }
   }, {
-    key: 'ComponentWillReceiveProps',
-    value: function ComponentWillReceiveProps(nextProps) {
-      console.log('next props', nextProps);
+    key: 'makeSpecial',
+    value: function makeSpecial(product) {
+      var _this4 = this;
+
+      _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
+        return res.data;
+      }).then(function (product) {
+        var newState = _this4.state.regularProds.filter(function (_product) {
+          return _product.id !== product.id;
+        });
+        _this4.setState({ regularProds: newState, specialProds: [].concat(_toConsumableArray(_this4.state.specialProds), [product]) });
+      });
     }
+
+    // changeProduct(product) {
+    //   axios.put(`/api/products/${product.id}`, product)
+    //     .then( res => res.data)
+    //     .then( product => {
+    //       product.isSpeical ? (
+    //         this.setState({ specialProds: [...this.state.specialProds, product]})
+    //       ) :
+    //       (
+    //         this.setState({ regularProds: [...this.state.regularProds, product] })
+    //       )
+    //     })
+    // }
+
   }, {
     key: 'render',
     value: function render() {
       var _state = this.state,
           specialProds = _state.specialProds,
           regularProds = _state.regularProds,
-          productId = _state.productId;
-      var changeProduct = this.changeProduct,
-          buttonClick = this.buttonClick,
+          productToChange = _state.productToChange;
+      var buttonClick = this.buttonClick,
           onChange = this.onChange;
 
-      return _react2.default.createElement(_Products2.default, { specialProds: specialProds, regularProds: regularProds, buttonClick: buttonClick, onChange: onChange, productId: productId });
+      return _react2.default.createElement(_Products2.default, { specialProds: specialProds, regularProds: regularProds, buttonClick: buttonClick, onChange: onChange, productToChange: productToChange });
     }
   }]);
 
@@ -19100,20 +19137,27 @@ var Product = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (Product.__proto__ || Object.getPrototypeOf(Product)).call(this));
 
     _this.state = {
-      productId: ''
+      regularProds: [],
+      specialProds: []
     };
     return _this;
   }
 
   _createClass(Product, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      this.setState({ regularProds: nextProps.regularProds, specialProds: nextProps.specialProds });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
-          specialProds = _props.specialProds,
-          regularProds = _props.regularProds,
           onChange = _props.onChange,
           buttonClick = _props.buttonClick,
-          productId = _props.productId;
+          productToChange = _props.productToChange,
+          specialProds = _props.specialProds,
+          regularProds = _props.regularProds;
+      // const {  } = this.state
 
       return _react2.default.createElement(
         'div',
@@ -19141,7 +19185,7 @@ var Product = function (_React$Component) {
           { onSubmit: buttonClick },
           _react2.default.createElement(
             'select',
-            { onChange: onChange, value: productId },
+            { onChange: onChange, value: productToChange.id },
             _react2.default.createElement(
               'option',
               { value: '' },
@@ -19157,7 +19201,7 @@ var Product = function (_React$Component) {
           ),
           _react2.default.createElement(
             'button',
-            null,
+            { disabled: productToChange.id === 0 },
             'Make Special'
           )
         ),
@@ -19171,7 +19215,7 @@ var Product = function (_React$Component) {
           { onSubmit: buttonClick },
           _react2.default.createElement(
             'select',
-            { onChange: onChange, value: productId },
+            { onChange: onChange, value: productToChange.id },
             _react2.default.createElement(
               'option',
               { value: '' },
@@ -19187,7 +19231,7 @@ var Product = function (_React$Component) {
           ),
           _react2.default.createElement(
             'button',
-            null,
+            { disabled: productToChange.id === 0 },
             'Make Regular'
           )
         )

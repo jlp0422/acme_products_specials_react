@@ -5,12 +5,18 @@ export default class Product extends React.Component {
   constructor() {
     super()
     this.state = {
-      productId: ''
+      regularProds: [],
+      specialProds: []
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    this.setState({ regularProds: nextProps.regularProds, specialProds: nextProps.specialProds})
+  }
+
   render() {
-    const { specialProds, regularProds, onChange, buttonClick, productId } = this.props
+    const { onChange, buttonClick, productToChange, specialProds, regularProds } = this.props
+    // const {  } = this.state
     return (
       <div>
         <h1>Acme React Products</h1>
@@ -20,7 +26,7 @@ export default class Product extends React.Component {
 
         <h3>Regular Products</h3>
         <form onSubmit={ buttonClick } >
-          <select onChange={onChange} value={ productId }>
+          <select onChange={onChange} value={ productToChange.id }>
             <option value=''>Select product</option>
             {
               regularProds.map(product => (
@@ -28,12 +34,12 @@ export default class Product extends React.Component {
               ))
             }
           </select>
-          <button>Make Special</button>
+          <button disabled={ productToChange.id === 0 }>Make Special</button>
         </form>
 
         <h3>Special Products</h3>
         <form onSubmit={ buttonClick }>
-          <select onChange={ onChange } value={ productId }>
+          <select onChange={ onChange } value={ productToChange.id }>
             <option value=''>Select product</option>
             {
               specialProds.map(product => (
@@ -41,7 +47,7 @@ export default class Product extends React.Component {
               ))
             }
           </select>
-          <button>Make Regular</button>
+          <button disabled={ productToChange.id === 0 }>Make Regular</button>
         </form>
       </div>
     )

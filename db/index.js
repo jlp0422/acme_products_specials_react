@@ -17,7 +17,9 @@ const seed = () => {
   return Promise.all([
     Product.create({ name: 'Crockpot', isSpecial: true }),
     Product.create({ name: 'Blender', isSpecial: false }),
-    Product.create({ name: 'Toaster Oven', isSpecial: false })
+    Product.create({ name: 'Toaster Oven', isSpecial: false }),
+    Product.create({ name: 'Microwave', isSpecial: false }),
+    Product.create({ name: 'Measuring cups', isSpecial: true })
   ])
 }
 

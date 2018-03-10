@@ -19165,7 +19165,7 @@ var Products = function Products(props) {
     ),
     _react2.default.createElement(
       'h3',
-      null,
+      { style: { marginTop: 40 } },
       'Special Products'
     ),
     _react2.default.createElement(

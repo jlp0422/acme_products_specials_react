@@ -24,7 +24,7 @@ const Products = (props) => {
         <button disabled={ !productToSpecial.id }>Make Special</button>
       </form>
 
-      <h3>Special Products</h3>
+      <h3 style={{ marginTop: 40 }}>Special Products</h3>
       <form onSubmit={ formSubmit }>
         <select onChange={ onChange } value={ productToRegular.id }>
           <option value=''>Select product</option>

@@ -19002,8 +19002,8 @@ var App = function (_React$Component) {
     };
     _this.makeSpecial = _this.makeSpecial.bind(_this);
     _this.makeRegular = _this.makeRegular.bind(_this);
-    _this.specialButtonClick = _this.specialButtonClick.bind(_this);
-    _this.regularButtonClick = _this.regularButtonClick.bind(_this);
+    _this.formSubmit = _this.formSubmit.bind(_this);
+    // this.regularButtonClick = this.regularButtonClick.bind(this)
     _this.onChange = _this.onChange.bind(_this);
     return _this;
   }
@@ -19017,10 +19017,10 @@ var App = function (_React$Component) {
       var regularProds = [];
       _axios2.default.get('/api/products').then(function (res) {
         return res.data;
-      }).then(function (products) {
-        return _this2.setState({ allProducts: products });
-      }).then(function () {
-        _this2.state.allProducts.map(function (product) {
+      })
+      // .then( products => this.setState({ allProducts: products }))
+      .then(function (products) {
+        products.map(function (product) {
           return product.isSpecial ? specialProds.push(product) : regularProds.push(product);
         });
       }).then(function () {
@@ -19028,28 +19028,22 @@ var App = function (_React$Component) {
       });
     }
   }, {
-    key: 'specialButtonClick',
-    value: function specialButtonClick(ev) {
+    key: 'formSubmit',
+    value: function formSubmit(ev) {
       ev.preventDefault();
-      this.makeRegular(this.state.productToRegular);
-    }
-  }, {
-    key: 'regularButtonClick',
-    value: function regularButtonClick(ev) {
-      ev.preventDefault();
-      this.makeSpecial(this.state.productToSpecial);
+      console.log(this.state);
+      this.state.productToRegular.name ? this.makeRegular(this.state.productToRegular) : this.makeSpecial(this.state.productToSpecial);
     }
   }, {
     key: 'onChange',
     value: function onChange(ev) {
       var id = ev.target.value;
-      var prod = this.state.allProducts.find(function (product) {
+      var allProducts = this.state.specialProds.concat(this.state.regularProds);
+      var prod = allProducts.find(function (product) {
         return product.id === id * 1;
       });
+      console.log(prod);
       prod.isSpecial ? this.setState({ productToRegular: prod }) : this.setState({ productToSpecial: prod });
-      console.log(this.state);
-      // this.setState({ productToChange: prod })
-      // }
     }
   }, {
     key: 'makeRegular',
@@ -19059,6 +19053,7 @@ var App = function (_React$Component) {
       _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
         return res.data;
       }).then(function (product) {
+        console.log(product);
         var newState = _this3.state.specialProds.filter(function (_product) {
           return _product.id !== product.id;
         });
@@ -19075,6 +19070,7 @@ var App = function (_React$Component) {
       _axios2.default.put('/api/products/' + product.id, product).then(function (res) {
         return res.data;
       }).then(function (product) {
+        console.log(product);
         var newState = _this4.state.regularProds.filter(function (_product) {
           return _product.id !== product.id;
         });
@@ -19091,11 +19087,10 @@ var App = function (_React$Component) {
           regularProds = _state.regularProds,
           productToSpecial = _state.productToSpecial,
           productToRegular = _state.productToRegular;
-      var regularButtonClick = this.regularButtonClick,
-          specialButtonClick = this.specialButtonClick,
+      var formSubmit = this.formSubmit,
           onChange = this.onChange;
 
-      return _react2.default.createElement(_Products2.default, { specialProds: specialProds, regularProds: regularProds, specialButtonClick: specialButtonClick, regularButtonClick: regularButtonClick, onChange: onChange, productToRegular: productToRegular, productToSpecial: productToSpecial });
+      return _react2.default.createElement(_Products2.default, { specialProds: specialProds, regularProds: regularProds, formSubmit: formSubmit, onChange: onChange, productToRegular: productToRegular, productToSpecial: productToSpecial });
     }
   }]);
 
@@ -19123,12 +19118,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var Products = function Products(props) {
   var onChange = props.onChange,
-      regularButtonClick = props.regularButtonClick,
-      specialButtonClick = props.specialButtonClick,
+      formSubmit = props.formSubmit,
       productToSpecial = props.productToSpecial,
       productToRegular = props.productToRegular,
       specialProds = props.specialProds,
       regularProds = props.regularProds;
+  // console.log(props)
 
   return _react2.default.createElement(
     'div',
@@ -19153,7 +19148,7 @@ var Products = function Products(props) {
     ),
     _react2.default.createElement(
       'form',
-      { onSubmit: regularButtonClick },
+      { onSubmit: formSubmit },
       _react2.default.createElement(
         'select',
         { onChange: onChange, value: productToSpecial.id },
@@ -19183,7 +19178,7 @@ var Products = function Products(props) {
     ),
     _react2.default.createElement(
       'form',
-      { onSubmit: specialButtonClick },
+      { onSubmit: formSubmit },
       _react2.default.createElement(
         'select',
         { onChange: onChange, value: productToRegular.id },

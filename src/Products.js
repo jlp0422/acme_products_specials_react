@@ -2,7 +2,8 @@
 import React from 'react';
 
 const Products = (props) => {
-  const { onChange, regularButtonClick, specialButtonClick, productToSpecial, productToRegular, specialProds, regularProds } = props
+  const { onChange, formSubmit, productToSpecial, productToRegular, specialProds, regularProds } = props
+  // console.log(props)
   return (
     <div>
       <h1>Acme React Products</h1>
@@ -11,7 +12,7 @@ const Products = (props) => {
       }</h2>
 
       <h3>Regular Products</h3>
-      <form onSubmit={ regularButtonClick } >
+      <form onSubmit={ formSubmit } >
         <select onChange={onChange} value={ productToSpecial.id }>
           <option value=''>Select product</option>
           {
@@ -24,7 +25,7 @@ const Products = (props) => {
       </form>
 
       <h3>Special Products</h3>
-      <form onSubmit={ specialButtonClick }>
+      <form onSubmit={ formSubmit }>
         <select onChange={ onChange } value={ productToRegular.id }>
           <option value=''>Select product</option>
           {

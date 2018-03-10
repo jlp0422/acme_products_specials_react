@@ -10,11 +10,13 @@ export default class App extends React.Component {
       regularProds: [],
       specialProds: [],
       allProducts: [],
-      productToChange: {}
+      productToRegular: {},
+      productToSpecial: {}
     }
     this.makeSpecial = this.makeSpecial.bind(this)
     this.makeRegular = this.makeRegular.bind(this)
-    this.buttonClick = this.buttonClick.bind(this)
+    this.specialButtonClick = this.specialButtonClick.bind(this)
+    this.regularButtonClick = this.regularButtonClick.bind(this)
     this.onChange = this.onChange.bind(this)
   }
 
@@ -32,16 +34,23 @@ export default class App extends React.Component {
       .then(() => this.setState({ specialProds, regularProds }))
   }
 
-  buttonClick(ev) {
+  specialButtonClick(ev) {
     ev.preventDefault()
-    const prod = this.state.productToChange
-    prod.isSpecial ? this.makeRegular(prod) : this.makeSpecial(prod)
+    this.makeRegular(this.state.productToRegular)
+  }
+
+  regularButtonClick(ev) {
+    ev.preventDefault()
+    this.makeSpecial(this.state.productToSpecial)
   }
 
   onChange(ev) {
     const id = ev.target.value
-    const prod = this.state.allProducts.find( product => product.id === id*1)
-    this.setState({ productToChange: prod })
+    const prod = this.state.allProducts.find(product => product.id === id * 1)
+    prod.isSpecial ? this.setState({ productToRegular: prod }) : this.setState({ productToSpecial: prod })
+    console.log(this.state)
+      // this.setState({ productToChange: prod })
+    // }
   }
 
   makeRegular(product) {
@@ -51,6 +60,7 @@ export default class App extends React.Component {
         const newState = this.state.specialProds.filter(_product => _product.id !== product.id)
         this.setState({ specialProds: newState, regularProds: [...this.state.regularProds, product] })
       })
+      .then(() => this.setState({ productToRegular: {} }))
   }
 
   makeSpecial(product) {
@@ -60,26 +70,14 @@ export default class App extends React.Component {
         const newState = this.state.regularProds.filter(_product => _product.id !== product.id)
         this.setState({ regularProds: newState, specialProds: [...this.state.specialProds, product ]})
       })
+      .then(() => this.setState({ productToSpecial: {} }))
   }
 
-  // changeProduct(product) {
-  //   axios.put(`/api/products/${product.id}`, product)
-  //     .then( res => res.data)
-  //     .then( product => {
-  //       product.isSpeical ? (
-  //         this.setState({ specialProds: [...this.state.specialProds, product]})
-  //       ) :
-  //       (
-  //         this.setState({ regularProds: [...this.state.regularProds, product] })
-  //       )
-  //     })
-  // }
-
   render() {
-    const { specialProds, regularProds, productToChange } = this.state
-    const { buttonClick, onChange } = this
+    const { specialProds, regularProds, productToSpecial, productToRegular } = this.state
+    const { regularButtonClick, specialButtonClick, onChange } = this
     return (
-      <Products specialProds={ specialProds } regularProds= { regularProds } buttonClick={ buttonClick } onChange={ onChange } productToChange= { productToChange }/>
+      <Products specialProds={ specialProds } regularProds={ regularProds } specialButtonClick={ specialButtonClick } regularButtonClick={ regularButtonClick } onChange={ onChange } productToRegular={ productToRegular } productToSpecial={ productToSpecial }/>
     )
   }
 }

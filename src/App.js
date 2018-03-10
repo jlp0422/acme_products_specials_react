@@ -10,7 +10,7 @@ export default class App extends React.Component {
       regularProds: [],
       specialProds: [],
       productToRegular: {},
-      productToSpecial: {}
+      productToSpecial: {},
     }
     this.makeSpecial = this.makeSpecial.bind(this)
     this.makeRegular = this.makeRegular.bind(this)

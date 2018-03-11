@@ -11,6 +11,7 @@ export default class App extends React.Component {
       specialProds: [],
       productToRegular: {},
       productToSpecial: {},
+      // productToChange: ''
     }
     this.makeSpecial = this.makeSpecial.bind(this)
     this.makeRegular = this.makeRegular.bind(this)

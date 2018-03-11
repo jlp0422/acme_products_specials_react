@@ -18998,6 +18998,7 @@ var App = function (_React$Component) {
       specialProds: [],
       productToRegular: {},
       productToSpecial: {}
+      // productToChange: ''
     };
     _this.makeSpecial = _this.makeSpecial.bind(_this);
     _this.makeRegular = _this.makeRegular.bind(_this);
@@ -19135,7 +19136,7 @@ var Products = function Products(props) {
     ),
     _react2.default.createElement(
       'h3',
-      null,
+      { style: { marginTop: 20 } },
       'Regular Products'
     ),
     _react2.default.createElement(
@@ -19159,7 +19160,7 @@ var Products = function Products(props) {
       ),
       _react2.default.createElement(
         'button',
-        { disabled: !productToSpecial.id },
+        { className: 'btn btn-info', disabled: !productToSpecial.id },
         'Make Special'
       )
     ),
@@ -19189,7 +19190,7 @@ var Products = function Products(props) {
       ),
       _react2.default.createElement(
         'button',
-        { disabled: !productToRegular.id },
+        { className: 'btn btn-info', disabled: !productToRegular.id },
         'Make Regular'
       )
     )

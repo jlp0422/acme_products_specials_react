@@ -11,7 +11,7 @@ const Products = (props) => {
         specialProds.length === 1 ? `product` : `products`
       }</h2>
 
-      <h3>Regular Products</h3>
+      <h3 style={{ marginTop: 20 }}>Regular Products</h3>
       <form onSubmit={ formSubmit } >
         <select onChange={onChange} value={ productToSpecial.id }>
           <option value=''>Select product</option>
@@ -21,7 +21,7 @@ const Products = (props) => {
             ))
           }
         </select>
-        <button disabled={ !productToSpecial.id }>Make Special</button>
+        <button className="btn btn-info" disabled={ !productToSpecial.id }>Make Special</button>
       </form>
 
       <h3 style={{ marginTop: 40 }}>Special Products</h3>
@@ -34,7 +34,7 @@ const Products = (props) => {
             ))
           }
         </select>
-        <button disabled={ !productToRegular.id }>Make Regular</button>
+        <button className="btn btn-info" disabled={ !productToRegular.id }>Make Regular</button>
       </form>
     </div>
   )
